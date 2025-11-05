@@ -1,0 +1,184 @@
+.detect-container {
+  display: flex;
+  justify-content: center;
+  gap: 35px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 30px;
+  margin-top: 40px;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+/* ✅ Left: Webcam Box */
+.left-box {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  width: 52%;
+  text-align: center;
+  border: 2px solid rgba(0, 255, 255, 0.2);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.webcam-feed {
+  width: 100%;
+  border-radius: 12px;
+  border: 3px solid #00eaff;
+  box-shadow: 0 0 25px rgba(0, 234, 255, 0.4);
+}
+
+/* ✅ Right: Controls Panel */
+.right-box {
+  width: 40%;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 20px;
+  border-radius: 18px;
+  text-align: center;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+/* ✅ Typography */
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #00d4ff;
+}
+
+.gesture {
+  font-size: 28px;
+  font-weight: bold;
+  color: #12d8fa;
+  margin-bottom: 15px;
+}
+
+.translated-text {
+  font-size: 20px;
+  font-style: italic;
+  margin-bottom: 12px;
+  color: #b6ffce;
+}
+
+.confidence-text {
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: #ffa7d1;
+}
+
+/* ✅ Buttons */
+.btn-detect,
+.btn-stop,
+.btn-speak {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 12px;
+  width: 80%;
+  transition: 0.3s;
+}
+
+.btn-detect {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: #fff;
+}
+
+.btn-detect:hover {
+  box-shadow: 0 0 15px rgba(0, 200, 255, 0.6);
+}
+
+.btn-stop {
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  color: white;
+}
+
+.btn-stop:hover {
+  box-shadow: 0 0 15px rgba(255, 75, 75, 0.6);
+}
+
+.btn-speak {
+  background: linear-gradient(135deg, #1fa2ff, #12d8fa, #a6ffcb);
+  color: black;
+}
+
+.btn-speak:hover {
+  transform: scale(1.05);
+}
+
+/* ✅ Dropdown */
+.label {
+  display: block;
+  margin: 15px 0 8px;
+  color: #ffdeff;
+  font-size: 16px;
+}
+
+.language-select {
+  padding: 10px;
+  width: 85%;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  text-align: center;
+  font-size: 16px;
+}
+
+.language-select:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ✅ Fade-in Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ✅ Responsive Design */
+@media (max-width: 950px) {
+  .detect-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .left-box,
+  .right-box {
+    width: 90%;
+  }
+}
+
+.language-select {
+  padding: 10px;
+  width: 85%;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+
+  background: linear-gradient(
+    135deg,
+    #17192a,
+    #1b0f75
+  ) !important; /* Dark background */
+  color: #ffffff !important; /* Force white text */
+  appearance: none; /* Removes default browser UI */
+}
+
+/* Dropdown options */
+.language-select option {
+  background: #242435 !important;
+  color: #ffffff !important;
+}

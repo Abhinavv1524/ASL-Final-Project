@@ -1,0 +1,117 @@
+# ===========================
+# ✅ Backend - Python/FastAPI
+# ===========================
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Environment variables
+*.env
+
+# SQLite Database
+*.db
+*.sqlite3
+
+# Jupyter / Colab artifacts
+.ipynb_checkpoints/
+
+# Trained ML Model Files
+*.h5
+*.keras
+*.tflite
+model/
+models/
+
+# Temp files used during prediction
+*.tmp
+tmp/
+temp/
+uploads/
+
+# Logs
+*.log
+
+# ===========================
+# ✅ Dataset + Media
+# ===========================
+
+MP_Data/
+dataset/
+data/
+frames/
+recordings/
+videos/
+images/
+
+# Ignore huge sample exports
+*.mp4
+*.avi
+*.mkv
+*.jpg
+*.png
+
+
+# ===========================
+# ✅ Frontend - React/Vite
+# ===========================
+
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Lock files (optional)
+package-lock.json
+yarn.lock
+
+# Local config files
+*.local
+
+# Coverage / Testing files
+coverage/
+
+
+# ===========================
+# ✅ OS / Editor files
+# ===========================
+
+# Windows & Mac Junk
+Thumbs.db
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Icon?
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Backup files
+*.bak
+*.swp
+*.tmp
+*.patch
+
+
+# ===========================
+# ✅ Misc
+# ===========================
+
+# Ignore everything in tests except .js
+tests/*
+!tests/**/*.js
+
+# Ignore private credentials
+secret_key.txt
+*.pem
+*.cert
