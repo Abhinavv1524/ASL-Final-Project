@@ -25,7 +25,7 @@ __pycache__/
 
 # Trained ML Model Files
 *.h5
-*.keras
+# *.keras
 *.tflite
 model/
 models/
@@ -58,7 +58,8 @@ images/
 *.jpg
 *.png
 
-
+!/src/assets/**
+!/public/**
 # ===========================
 # ✅ Frontend - React/Vite
 # ===========================

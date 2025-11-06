@@ -23,7 +23,11 @@ function DetectionApp() {
     formData.append("file", blob, "frame.jpg");
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/predict/", formData);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/predict/`,
+        formData
+      );
+
       const detectedGesture = res.data.prediction;
       setGesture(detectedGesture);
       setConfidence((res.data.confidence * 100).toFixed(2));
