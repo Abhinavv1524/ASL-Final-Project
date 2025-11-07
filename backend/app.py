@@ -29,11 +29,16 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=[
+        "http://localhost:5173",  # Local dev
+        "https://asl-final-project.onrender.com",  # Backend self-call
+        "https://asl-detect.netlify.app",  # ✅ No trailing slash!
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./users.db"

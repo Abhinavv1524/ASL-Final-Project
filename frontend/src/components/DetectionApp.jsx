@@ -23,7 +23,10 @@ function DetectionApp() {
     formData.append("file", blob, "frame.jpg");
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/predict/", formData);
+      const res = await axios.post(
+        "https://asl-final-project.onrender.com/predict/",
+        formData
+      );
 
       const detectedGesture = res.data.prediction;
       setGesture(detectedGesture);
