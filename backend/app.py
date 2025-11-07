@@ -15,7 +15,14 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from jose import jwt
 from datetime import datetime, timedelta
+from fastapi import FastAPI, Request, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from google.oauth2 import id_token
+from google.auth.transport import requests as grequests
+import os
 
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
 app = FastAPI()
 
@@ -38,9 +45,10 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
+    username = Column(String, index=True)  # ❌ remove `unique=True`
     email = Column(String, unique=True, index=True)
     password = Column(String)
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -53,7 +61,7 @@ def get_db():
     finally:
         db.close()
 
-SECRET_KEY = "super_secret_key_123"  # You can change this
+SECRET_KEY = os.getenv("SECRET_KEY", "fallback_secret_key")
 ALGORITHM = "HS256"
 
 
@@ -74,7 +82,15 @@ def signup(user: dict, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
 
-    return {"message": "Signup successful"}
+    # ✅ Return token + username (auto-login)
+    access_token = "dummy_token_123"
+
+    return {
+        "message": "Signup successful",
+        "access_token": access_token,
+        "username": new_user.username
+    }
+
 
 
 @app.post("/login")
@@ -169,3 +185,31 @@ async def visualize_keypoints(file: UploadFile = File(...)):
     buf.seek(0)
 
     return StreamingResponse(buf, media_type="image/jpeg")
+
+
+@app.post("/auth/google")
+def google_auth(user: dict, db: Session = Depends(get_db)):
+    try:
+        email = user.get("email")
+        name = user.get("name")
+        print("📨 Received from frontend:", user)
+
+        if not email:
+            raise HTTPException(status_code=400, detail="Email missing from Google auth")
+
+        existing_user = db.query(User).filter(User.email == email).first()
+        if existing_user:
+            print("✅ Existing user login:", existing_user.username)
+            return {"message": "Login successful", "user": existing_user.username}
+
+        new_user = User(username=name, email=email, password="google_login")
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+
+        print("🆕 Created new Google user:", new_user.username)
+        return {"message": "Signup successful via Google", "user": new_user.username}
+
+    except Exception as e:
+        print("Google Auth error:", e)
+        raise HTTPException(status_code=401, detail="Google login failed")
