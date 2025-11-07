@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 import "../styles/Auth.css";
 
 const Login = () => {
@@ -16,7 +19,7 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+      const response = await fetch("http://127.0.0.1:8000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -30,7 +33,7 @@ const Login = () => {
         localStorage.setItem(
           "user",
           JSON.stringify({ username: data.username })
-        ); // ✅ Add this
+        );
         navigate("/");
       } else {
         alert(data.detail || "Invalid credentials");
@@ -38,6 +41,37 @@ const Login = () => {
     } catch (error) {
       console.error("Error:", error);
       alert("Something went wrong!");
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const decoded = jwtDecode(credentialResponse.credential);
+      console.log("✅ Decoded Google Data:", decoded);
+
+      const { email, name } = decoded;
+      if (!email) {
+        alert("Google login failed: No email found.");
+        return;
+      }
+
+      console.log("📤 Sending to backend:", { email, name });
+
+      const res = await axios.post("http://127.0.0.1:8000/auth/google", {
+        email,
+        name,
+      });
+
+      console.log("📥 Backend response:", res.data);
+
+      const data = res.data;
+      alert("Google Login Successful!");
+      localStorage.setItem("token", "google");
+      localStorage.setItem("user", JSON.stringify({ username: data.user }));
+      navigate("/");
+    } catch (err) {
+      console.error("❌ Google Login Error:", err);
+      alert("Google login failed!");
     }
   };
 
@@ -66,6 +100,16 @@ const Login = () => {
         <p className="switch-text">
           Don’t have an account? <a href="/signup">Sign Up</a>
         </p>
+
+        {/* ✅ Google Login Section */}
+        <div style={{ marginTop: "25px" }}>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => {
+              alert("Google login failed 😢");
+            }}
+          />
+        </div>
       </div>
     </div>
   );
