@@ -20,6 +20,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from google.oauth2 import id_token
 from google.auth.transport import requests as grequests
 import os
+import tensorflow as tf
 
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -108,8 +109,28 @@ def login(user: dict, db: Session = Depends(get_db)):
     }
 
 
-model = load_model("best_finetuned_modelpart2.keras")
+# model = load_model("best_finetuned_modelpart2.keras")
+# actions = np.array(['hello', 'thanks', 'iloveyou', 'yes', 'no'])
+
+# Load the TensorFlow Lite model
+interpreter = tf.lite.Interpreter(model_path="model_optimized.tflite")
+interpreter.allocate_tensors()
+
+# Get input and output tensor details
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
+
 actions = np.array(['hello', 'thanks', 'iloveyou', 'yes', 'no'])
+
+# Function to run inference with TFLite
+def predict_with_tflite(sequence):
+    input_data = np.array(sequence, dtype=np.float32)
+    interpreter.set_tensor(input_details[0]['index'], input_data)
+    interpreter.invoke()
+    output_data = interpreter.get_tensor(output_details[0]['index'])
+    return output_data
+
+
 mp_holistic = mp.solutions.holistic
 sequence_buffer = deque(maxlen=30)
 SINGLE_FRAME_MODE = True
@@ -148,9 +169,14 @@ async def predict(file: UploadFile = File(...)):
         keypoints = extract_keypoints(results)
         sequence = np.expand_dims([keypoints] * 30, axis=0)
 
-        yhat = model.predict(sequence, verbose=0)
+        # yhat = model.predict(sequence, verbose=0)
+        # predicted_class = actions[np.argmax(yhat)]
+        # confidence = float(np.max(yhat))
+
+        yhat = predict_with_tflite(sequence)
         predicted_class = actions[np.argmax(yhat)]
         confidence = float(np.max(yhat))
+
 
     return {"prediction": predicted_class, "confidence": confidence}
 
